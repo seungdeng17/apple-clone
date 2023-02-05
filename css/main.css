@@ -1,7 +1,7 @@
 @charset 'utf-8';
 
 html {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 14px;
 }
 body {
@@ -59,6 +59,7 @@ a {
 }
 .scroll-section {
   padding-top: 50vh;
+  outline: 1px solid red;
 }
 #scroll-section-0 h1 {
   font-size: 4rem;
@@ -71,6 +72,7 @@ a {
   margin: 5px 0;
   height: 3em;
   font-size: 2.5rem;
+  opacity: 0;
 }
 .main-message p {
   font-weight: bold;
