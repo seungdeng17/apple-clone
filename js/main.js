@@ -110,35 +110,22 @@
 
     switch (currentScene) {
       case 0:
-        const messageA_opacity_in = calcValues(values.messageA_opacity_in, currentYOffset);
-        const messageA_opacity_out = calcValues(values.messageA_opacity_out, currentYOffset);
-        const messageA_translateY_in = calcValues(values.messageA_translateY_in, currentYOffset);
-        const messageA_translateY_out = calcValues(values.messageA_translateY_out, currentYOffset);
-
-        if (scrollRatio <= (values.messageA_opacity_in[2].end + values.messageA_opacity_out[2].start) / 2) {
-          // in
-          objs.messageA.style.opacity = messageA_opacity_in;
-          objs.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+        if (scrollRatio <= 0.22) {
+          objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
+          objs.messageA.style.transform = `translateY(${calcValues(values.messageA_translateY_in, currentYOffset)}%)`;
         } else {
-          // out
-          objs.messageA.style.opacity = messageA_opacity_out;
-          objs.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+          objs.messageA.style.opacity = calcValues(values.messageA_opacity_out, currentYOffset);
+          objs.messageA.style.transform = `translateY(${calcValues(values.messageA_translateY_out, currentYOffset)}%)`;
         }
 
-        const messageB_opacity_in = calcValues(values.messageB_opacity_in, currentYOffset);
-        const messageB_opacity_out = calcValues(values.messageB_opacity_out, currentYOffset);
-        const messageB_translateY_in = calcValues(values.messageB_translateY_in, currentYOffset);
-        const messageB_translateY_out = calcValues(values.messageB_translateY_out, currentYOffset);
-
-        if (scrollRatio <= (values.messageB_opacity_in[2].end + values.messageB_opacity_out[2].start) / 2) {
-          // in
-          objs.messageB.style.opacity = messageB_opacity_in;
-          objs.messageB.style.transform = `translateY(${messageB_translateY_in}%)`;
+        if (scrollRatio <= 0.42) {
+          objs.messageB.style.opacity = calcValues(values.messageB_opacity_in, currentYOffset);
+          objs.messageB.style.transform = `translateY(${calcValues(values.messageB_translateY_in, currentYOffset)}%)`;
         } else {
-          // out
-          objs.messageB.style.opacity = messageB_opacity_out;
-          objs.messageB.style.transform = `translateY(${messageB_translateY_out}%)`;
+          objs.messageB.style.opacity = calcValues(values.messageB_opacity_out, currentYOffset);
+          objs.messageB.style.transform = `translateY(${calcValues(values.messageB_translateY_out, currentYOffset)}%)`;
         }
+
         break;
       case 1:
         break;
