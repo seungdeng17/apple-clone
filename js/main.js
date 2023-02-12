@@ -319,6 +319,8 @@
       }
 
       case 3: {
+        let step = 0;
+
         // 가로/세로 모두 꽉 차게 하기 위해 여기서 세팅 (계산 필요)
         const widthRatio = window.innerWidth / objs.canvas.width;
         const heightRatio = window.innerHeight / objs.canvas.height;
@@ -357,6 +359,20 @@
         // 좌우 흰색 박스 그리기
         objs.context.fillRect(parseInt(calcValues(values.rect1X, currentYOffset)), 0, parseInt(whiteRectWidth), objs.canvas.height);
         objs.context.fillRect(parseInt(calcValues(values.rect2X, currentYOffset)), 0, parseInt(whiteRectWidth), objs.canvas.height);
+
+        if (scrollRatio < values.rect1X[2].end) {
+          step = 1;
+          objs.canvas.classList.remove('sticky');
+        } else {
+          step = 2;
+          // 이미지 블렌드
+          objs.canvas.classList.add('sticky');
+          objs.canvas.style.top = `${-(objs.canvas.height - objs.canvas.height * canvasScaleRatio) / 2}px`;
+
+          // if () {
+          //   step = 3;
+          // }
+        }
 
         break;
       }
