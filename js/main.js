@@ -16,6 +16,9 @@
         messageB: document.querySelector('#scroll-section-0 .main-message.b'),
         messageC: document.querySelector('#scroll-section-0 .main-message.c'),
         messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+        canvas: document.querySelector('#video-canvas-0'),
+        context: document.querySelector('#video-canvas-0').getContext('2d'),
+        videoImages: [],
       },
       values: {
         messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
@@ -34,6 +37,9 @@
         messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
         messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
         messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+        videoImageCount: 300,
+        imageSequence: [0, 299],
+        canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
       },
     },
     {
@@ -93,6 +99,15 @@
     },
   ];
 
+  const setCanvasImages = () => {
+    for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+      const imgElem = new Image();
+      imgElem.src = `../apple-clone-v11/video/001/IMG_${6726 + i}.JPG`;
+      sceneInfo[0].objs.videoImages.push(imgElem);
+    }
+  };
+  setCanvasImages();
+
   const setLayout = () => {
     // 각 스크롤 섹션의 높이 세팅
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -114,6 +129,9 @@
       }
     }
     document.body.setAttribute('id', `show-scene-${currentScene}`);
+
+    const heightRatio = window.innerHeight / 1080;
+    sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
   };
 
   const scrollLoop = () => {
@@ -136,7 +154,7 @@
       document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
-    if (enterNewScene) return;
+    if (enterNewScene) return; // scene이 변경되는 시점의 엣지 케이스를 제외하기 위해 return
     playAnimation();
   };
 
@@ -149,6 +167,10 @@
 
     switch (currentScene) {
       case 0:
+        const sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset);
+
         if (scrollRatio <= 0.22) {
           // in
           objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
@@ -260,6 +282,9 @@
     yOffset = window.pageYOffset;
     scrollLoop();
   });
-  window.addEventListener('load', setLayout);
+  window.addEventListener('load', () => {
+    setLayout();
+    sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+  });
   window.addEventListener('resize', setLayout);
 })();
