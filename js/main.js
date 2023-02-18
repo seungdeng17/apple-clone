@@ -180,9 +180,18 @@
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
 
+    if (delayedYOffset < prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+      document.body.classList.remove('scroll-effect-end');
+    }
+
     if (delayedYOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       enterNewScene = true;
-      currentScene++;
+      if (currentScene === sceneInfo.length - 1) {
+        document.body.classList.add('scroll-effect-end');
+      }
+      if (currentScene < sceneInfo.length - 1) {
+        currentScene++;
+      }
       document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
@@ -415,6 +424,8 @@
 
             objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
             objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%, 0)`;
+          } else {
+            objs.canvasCaption.style.opacity = values.canvasCaption_opacity[0];
           }
         }
 
@@ -472,27 +483,50 @@
     }
   }
 
-  window.addEventListener('scroll', () => {
-    yOffset = window.pageYOffset;
-    scrollLoop();
-    checkMenu();
-
-    if (!rafState) {
-      rafId = requestAnimationFrame(loop);
-      rafState = true;
-    }
-  });
   window.addEventListener('load', () => {
+    document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
-  });
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 900) {
-      setLayout();
+
+    let tempYOffset = yOffset;
+    let tempScrollCount = 0;
+    if (yOffset > 0) {
+      const siId = setInterval(() => {
+        window.scrollTo(0, tempYOffset);
+        tempYOffset += 5;
+        tempScrollCount++;
+
+        if (tempScrollCount > 20) {
+          clearInterval(siId);
+        }
+      }, 20);
     }
-    sceneInfo[3].values.rectStartY = 0;
+
+    window.addEventListener('scroll', () => {
+      yOffset = window.pageYOffset;
+      scrollLoop();
+      checkMenu();
+
+      if (!rafState) {
+        rafId = requestAnimationFrame(loop);
+        rafState = true;
+      }
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) {
+        window.location.reload();
+      }
+    });
+    window.addEventListener('orientationchange', () => {
+      scrollTo(0, 0);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    });
+    document.querySelector('.loading').addEventListener('transitionend', (e) => {
+      document.body.removeChild(e.currentTarget);
+    });
   });
-  window.addEventListener('orientationchange', setLayout);
 
   setCanvasImages();
 })();
