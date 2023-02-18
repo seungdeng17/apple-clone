@@ -415,6 +415,8 @@
 
             objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
             objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%, 0)`;
+          } else {
+            objs.canvasCaption.style.opacity = values.canvasCaption_opacity[0];
           }
         }
 
@@ -477,6 +479,20 @@
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
 
+    let tempYOffset = yOffset;
+    let tempScrollCount = 0;
+    if (yOffset > 0) {
+      const siId = setInterval(() => {
+        window.scrollTo(0, tempYOffset);
+        tempYOffset += 5;
+        tempScrollCount++;
+
+        if (tempScrollCount > 20) {
+          clearInterval(siId);
+        }
+      }, 20);
+    }
+
     window.addEventListener('scroll', () => {
       yOffset = window.pageYOffset;
       scrollLoop();
@@ -489,12 +505,14 @@
     });
     window.addEventListener('resize', () => {
       if (window.innerWidth > 900) {
-        setLayout();
-        sceneInfo[3].values.rectStartY = 0;
+        window.location.reload();
       }
     });
     window.addEventListener('orientationchange', () => {
-      setTimeout(setLayout, 500);
+      scrollTo(0, 0);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     });
     document.querySelector('.loading').addEventListener('transitionend', (e) => {
       document.body.removeChild(e.currentTarget);
